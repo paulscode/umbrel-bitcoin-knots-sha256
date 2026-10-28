@@ -13,6 +13,7 @@ import {
 	type Option,
 	DefaultValuesForVersion,
 	resolveVersion,
+	AVAILABLE_BITCOIN_KNOTS_VERSIONS,
 	LATEST,
 } from '#settings'
 
@@ -174,9 +175,12 @@ export async function migrateBip110() {
 		throw new Error(`${msg}: ${err.message}`)
 	})
 	
-	if (config.version === "BIP110") {
+	// This image ships one build. A version stored by an earlier image (Retropex's
+	// picker offered Knots 29.x builds, and its "BIP110" choice) names a directory
+	// that does not exist here, and the bitcoind manager refuses to start a version
+	// that is not installed. Point any such value at the build this image ships.
+	if (config.version !== "latest" && !(AVAILABLE_BITCOIN_KNOTS_VERSIONS as readonly string[]).includes(config.version)) {
 		config.version = "latest"
-		config.consensusrules = true
 		await writeWithBackup(SETTINGS_JSON, JSON.stringify(config, null, 2) + '\n')
 	}
 }

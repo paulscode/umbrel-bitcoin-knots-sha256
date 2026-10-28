@@ -76,9 +76,10 @@ function applyDerivedSettings(settings: SettingsSchema): SettingsSchema {
 	// exit, not a warning, so the node simply does not come up.
 	//
 	// Upstream does not need this rule because the app it was written for is
-	// archival by default. This one prunes by default, which makes the pairing
-	// reachable in ordinary use: turning Peer Block Filters on in Advanced Settings
-	// sets blockfilterindex above, and the next bitcoind start fails.
+	// archival by default. The companion app built on this image prunes by default,
+	// which makes the pairing reachable in ordinary use: turning Peer Block Filters
+	// on in Advanced Settings sets blockfilterindex above, and the next bitcoind
+	// start fails.
 	//
 	// Ordered after the peerblockfilters rule deliberately, so it overrides rather
 	// than races it. Same shape as the txindex rule above, for the same reason:
@@ -161,12 +162,6 @@ function generateBaseConfLines(settings: SettingsSchema): string[] {
 				break
 			}
 
-			case 'mineblake2': {
-				if (value === true) {
-					lines.push("blocknotify=curl -s -m 5 http://btc-datum_datum_1:21009/NOTIFY")
-				}
-				break
-			}
 
 			// All other keys → default "key=value" (boolean→0|1, number/string as is)
 			default: {
@@ -385,7 +380,7 @@ export async function ensureConfig(): Promise<SettingsSchema> {
 	// Migrate legacy app's bitcoin-config.json to this app's settings.json if it exists
 	await migrateLegacyConfig()
 	
-	// migrate the BIP110 version to the latest version of Knots since it's now in Knots.
+	// Point a stored version this image does not ship (Knots 29.x builds, "BIP110") at the one it does
 	await migrateBip110()
 
 	// Write out settings.json

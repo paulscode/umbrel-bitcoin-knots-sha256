@@ -8,7 +8,10 @@
 // IMPORTANT:
 // - Any version added here needs to be added in the Dockerfile
 // - The array of versions must be newest → oldest. We do a simple index comparison to compare versions, so lower index = newer.
-export const AVAILABLE_BITCOIN_KNOTS_VERSIONS = ['v29.4.2.knots20260508', 'v29.4.2.knots20260508rc2', 'v29.4.1.knots20260508', 'v29.4.1.knots20260508rc5', 'v29.4.1.knots20260508rc4', 'v29.4.knots20260508', 'v29.3.knots20260508', 'v29.3.knots20260507', 'v29.3.knots20260210', 'v29.2.knots20251110','v29.2', 'v29.1'] as const
+// One build: Bitcoin Knots SHA256. The entry must equal the directory name under
+// /opt/bitcoind (apps/backend/Dockerfile), because the bitcoind manager builds the
+// binary's path from it. Upstream's other entries are other chains or older series.
+export const AVAILABLE_BITCOIN_KNOTS_VERSIONS = ['v31.1.knots-sha256.20261018'] as const
 
 // Default Bitcoin Knots version used by bitcoind manager (always the newest version in the array)
 export const DEFAULT_BITCOIN_KNOTS_VERSION = AVAILABLE_BITCOIN_KNOTS_VERSIONS[0]
@@ -361,19 +364,6 @@ export const settingsMetadata = {
 		subDescription: 'Note: datacarrier must be enabled for this setting to take effect.',
 		default: 42,
 		unit: 'bytes',
-		versionOverrides: {
-			// v29.2.knots20251110 changed the default and max so we declare a tiny diff
-			'v29.4.2.knots20260508': {default: 83},
-			'v29.4.2.knots20260508rc2': {default: 83},
-			'v29.4.1.knots20260508': {default: 83},
-			'v29.4.1.knots20260508rc5': {default: 83},
-			'v29.4.1.knots20260508rc4': {default: 83},
-			'v29.4.knots20260508': {default: 83},
-			'v29.3.knots20260508': {default: 83},
-			'v29.3.knots20260507': {default: 83},
-			'v29.3.knots20260210': {default: 83},
-			'v29.2.knots20251110': {default: 83},
-		},
 	},
 
 	permitbaremultisig: {
@@ -455,7 +445,9 @@ export const settingsMetadata = {
 		label: 'Max block size in bytes',
 		bitcoinLabel: 'blockmaxsize',
 		description: 'Set maximum block size in bytes.',
-		default: 3985000,
+		// Bitcoin Knots SHA256's own default (as in Knots); upstream's 3985000 would
+		// override it, because every setting is written into bitcoin.conf.
+		default: 300000,
 	},
 
 	blockmaxweight: {
@@ -464,7 +456,8 @@ export const settingsMetadata = {
 		label: 'Max block size in weight',
 		bitcoinLabel: 'blockmaxweight',
 		description: 'Set maximum BIP141 block weight.',
-		default: 3985000,
+		// Bitcoin Knots SHA256's own default (as in Knots); see blockmaxsize.
+		default: 1200000,
 	},
 
 	blockreconstructionextratxn: {
@@ -577,17 +570,6 @@ export const settingsMetadata = {
 		default: true,
 	},
 
-	maxorphantx: {
-		tab: 'optimization',
-		kind: 'number',
-		label: 'Max Orphan Transactions',
-		bitcoinLabel: 'maxorphantx',
-		description:
-			"Set the maximum number of orphan transactions (transactions missing one or more of their inputs) that your node will keep in memory. By fine-tuning it, you can optimize your node's memory usage and manage its performance based on your device's capabilities. A larger limit allows your node to store more orphan transactions, potentially increasing the chances of finding missing inputs. A smaller limit conserves memory but will result in your node evicting some orphan transactions from memory when the limit is reached.",
-		step: 1,
-		default: 100,
-		unit: 'txs',
-	},
 
 	/* ===== RPC & REST tab ===== */
 	rest: {
@@ -623,19 +605,8 @@ export const settingsMetadata = {
 		description:
 			'Enable blocknotify for datum to avoid mining stale work.',
 		default: true,
-		removedIn: 'v29.4.1.knots20260508rc4'
 	},
 
-	mineblake2: {
-		tab: 'optimization',
-		kind: 'toggle',
-		label: 'Enable blocknotify for datum (blake2b)',
-		bitcoinLabel: 'datumblake2',
-		description:
-			'Enable blocknotify for datum to avoid mining stale work.',
-		default: true,
-		introducedIn: 'v29.4.1.knots20260508rc4'
-	},
 
 	/* ===== Version tab ===== */
 	// TODO: finess description and subDescription
