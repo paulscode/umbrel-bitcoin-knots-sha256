@@ -25,7 +25,7 @@
 # Upstream ships twelve Knots builds and a picker. Every one of them is a
 # different chain or an older series than this; the picker is kept with one entry.
 FROM debian:stable-slim AS bitcoind_knots_sha256
-ARG KNOTS_SHA256_VERSION=31.1.knots-sha256.20261018
+ARG KNOTS_SHA256_VERSION=31.2.knots-sha256.20261031
 ARG TARGETARCH
 COPY apps/backend/knots-sha256-maintainer.asc /tmp/maintainer.asc
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates wget gpg gpg-agent \
@@ -78,15 +78,15 @@ WORKDIR /repo/apps/backend
 VOLUME /data
 
 # bitcoind binaries (the directory name is the version string the settings store)
-RUN mkdir -p /opt/bitcoind/v31.1.knots-sha256.20261018
-COPY --from=bitcoind_knots_sha256 /out/bin/bitcoind    /opt/bitcoind/v31.1.knots-sha256.20261018/bitcoind
-COPY --from=bitcoind_knots_sha256 /out/bin/bitcoin-cli /opt/bitcoind/v31.1.knots-sha256.20261018/bitcoin-cli
+RUN mkdir -p /opt/bitcoind/v31.2.knots-sha256.20261031
+COPY --from=bitcoind_knots_sha256 /out/bin/bitcoind    /opt/bitcoind/v31.2.knots-sha256.20261031/bitcoind
+COPY --from=bitcoind_knots_sha256 /out/bin/bitcoin-cli /opt/bitcoind/v31.2.knots-sha256.20261031/bitcoin-cli
 
 # Give 1000:1000 write permisions to /opt/bitcoind (just directory) so we can flip the symbolic link while the container runs as 1000:1000
 RUN chown 1000:1000 /opt/bitcoind
 
 # Symbolic link for default bitcoind binary
-RUN ln -sfn /opt/bitcoind/v31.1.knots-sha256.20261018 /opt/bitcoind/current
+RUN ln -sfn /opt/bitcoind/v31.2.knots-sha256.20261031 /opt/bitcoind/current
 RUN ln -sfn /opt/bitcoind/current/bitcoind    /usr/local/bin/bitcoind
 RUN ln -sfn /opt/bitcoind/current/bitcoin-cli /usr/local/bin/bitcoin-cli
 
@@ -135,15 +135,15 @@ COPY --from=app-builder /repo/libs/settings/dist ./libs/settings/dist
 COPY --from=app-builder /repo/libs/shared-types/dist ./libs/shared-types/dist
 
 # bitcoind binaries (the directory name is the version string the settings store)
-RUN mkdir -p /opt/bitcoind/v31.1.knots-sha256.20261018
-COPY --from=bitcoind_knots_sha256 /out/bin/bitcoind    /opt/bitcoind/v31.1.knots-sha256.20261018/bitcoind
-COPY --from=bitcoind_knots_sha256 /out/bin/bitcoin-cli /opt/bitcoind/v31.1.knots-sha256.20261018/bitcoin-cli
+RUN mkdir -p /opt/bitcoind/v31.2.knots-sha256.20261031
+COPY --from=bitcoind_knots_sha256 /out/bin/bitcoind    /opt/bitcoind/v31.2.knots-sha256.20261031/bitcoind
+COPY --from=bitcoind_knots_sha256 /out/bin/bitcoin-cli /opt/bitcoind/v31.2.knots-sha256.20261031/bitcoin-cli
 
 # Give 1000:1000 write permisions to /opt/bitcoind (just directory) so we can flip the symbolic link while the container runs as 1000:1000
 RUN chown 1000:1000 /opt/bitcoind
 
 # Symbolic link for default bitcoind binary
-RUN ln -sfn /opt/bitcoind/v31.1.knots-sha256.20261018 /opt/bitcoind/current
+RUN ln -sfn /opt/bitcoind/v31.2.knots-sha256.20261031 /opt/bitcoind/current
 RUN ln -sfn /opt/bitcoind/current/bitcoind    /usr/local/bin/bitcoind
 RUN ln -sfn /opt/bitcoind/current/bitcoin-cli /usr/local/bin/bitcoin-cli
 

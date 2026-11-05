@@ -17,7 +17,7 @@ Kept deliberately small so upstream's fixes keep applying:
    `AVAILABLE_BITCOIN_KNOTS_VERSIONS` must equal the directory under `/opt/bitcoind`.
 2. **Stored versions from upstream** (Knots 29.x choices, "BIP110") are moved to "latest" at startup
    (`migrateBip110`), because the bitcoind manager refuses to start a version that is not installed.
-3. **Settings follow Bitcoin Knots SHA256 31.1.** Every setting is written into `bitcoin.conf`, so the UI defaults
+3. **Settings follow Bitcoin Knots SHA256 31.2.** Every setting is written into `bitcoin.conf`, so the UI defaults
    override the node's: `blockmaxsize`/`blockmaxweight` default to the node's 300000 / 1200000 (upstream 3985000);
    `datacarriersize` stays 42 (no per-version override). `maxorphantx` is gone (removed by Bitcoin Core 31). The
    BLAKE2b blocknotify toggle is gone; the `datum` toggle stays (this is the chain the official Datum app mines).

@@ -11,7 +11,7 @@
 // One build: Bitcoin Knots SHA256. The entry must equal the directory name under
 // /opt/bitcoind (apps/backend/Dockerfile), because the bitcoind manager builds the
 // binary's path from it. Upstream's other entries are other chains or older series.
-export const AVAILABLE_BITCOIN_KNOTS_VERSIONS = ['v31.1.knots-sha256.20261018'] as const
+export const AVAILABLE_BITCOIN_KNOTS_VERSIONS = ['v31.2.knots-sha256.20261031'] as const
 
 // Default Bitcoin Knots version used by bitcoind manager (always the newest version in the array)
 export const DEFAULT_BITCOIN_KNOTS_VERSION = AVAILABLE_BITCOIN_KNOTS_VERSIONS[0]

@@ -128,7 +128,7 @@ export class BitcoindManager {
 		try {
 			const firstLine = execFileSync(this.bin, ['--version']).toString().split('\n')[0]
 			const implementation = firstLine.replace(/(?:daemon|RPC client)?\s*version.*$/i, '').trim()
-			// Bitcoin Knots SHA256 prints e.g. v31.1.0.knots-sha256.20261018; keep the suffix in the banner
+			// Bitcoin Knots SHA256 prints e.g. v31.2.0.knots-sha256.20261031; keep the suffix in the banner
 			const version = (firstLine.match(/v\d+\.\d+(?:\.\d+)?(?:\.knots(?:-sha256\.)?\d+(?:rc\d+)?)?(?:\+[\w.-]+)?/) ?? ['unknown'])[0]
 			return {implementation, version}
 		} catch {
